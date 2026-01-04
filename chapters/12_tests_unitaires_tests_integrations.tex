@@ -1,0 +1,134 @@
+\chapter{Tests unitaires et tests d’intégration}
+
+Pour limiter les bugs et garder un code maintenable dans le temps, j’ai mis en place une stratégie de tests sur le back-end de Jardin Solidaire. Mon objectif est simple : quand je touche à une logique sensible (validations, sécurité, comportement des routes), je veux pouvoir relancer une suite de tests et savoir tout de suite si j’ai cassé quelque chose. Ça me permet de repérer une \textbf{régression} dès qu’elle apparaît, au lieu de la découvrir plus tard en test manuel.
+
+\section*{Plan de tests : parcours critiques}
+\addcontentsline{toc}{section}{Plan de tests : parcours critiques}
+Avant d’écrire les tests, j’ai listé les \textbf{parcours critiques} (ceux qui bloquent l’usage si ça casse) et j’ai associé à chacun un type de test, un outil et un critère de succès. Ce choix me permet de tester en priorité ce qui a le plus d’impact utilisateur, de rendre la stratégie lisible et ne pas tester pas au hasard.
+
+\noindent Ce plan de tests couvre l’ensemble de la stratégie (unitaires, intégration et E2E). Les scénarios E2E listés ici sont détaillés dans le chapitre "Tests end-to-end (E2E)", où je présente les parcours rejoués côté interface et leur exécution en CI.
+
+\begin{figure}[H]
+\centering
+
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\renewcommand{\arraystretch}{1.35}
+\setlength{\tabcolsep}{6pt}
+
+\begin{tabularx}{\textwidth}{|P{3.3cm}|P{2.0cm}|P{2.0cm}|Y|}
+\hline
+\textbf{Parcours critique} & \textbf{Type} & \textbf{Outil} & \textbf{Critère de succès} \\
+\hline
+Inscription / connexion &
+E2E &
+Playwright &
+Page accessible, champs présents, soumission possible \\
+\hline
+Réserver un créneau &
+Intégration &
+Supertest &
+\texttt{201} et réservation créée \\
+\hline
+Conflit de réservation &
+Intégration &
+Supertest &
+\texttt{409 Conflict} si créneau déjà pris \\
+\hline
+Accès non autorisé &
+Intégration &
+Supertest &
+\texttt{401} si non authentifié·e / \texttt{403} si non autorisé·e \\
+\hline
+Navigation jardins $\rightarrow$ détail &
+E2E &
+Playwright &
+Au moins une carte visible, clic sur une carte, page détail affichée \\
+\hline
+\end{tabularx}
+
+\vspace{6pt}
+\caption{Plan de tests : association des parcours critiques, types de tests, outils et critères de succès.}
+\label{fig:plan-tests-parcours-critiques}
+\end{figure}
+
+\newpage
+
+J'ai mis en place le projet avec des commandes dédiées pour exécuter les tests à tout moment : \texttt{npm run test} (suite complète), \texttt{npm run test:watch} (feedback immédiat en développement) et \texttt{npm run test:cov} (couverture) (Figure~\ref{fig:tests-scripts}). 
+Ce choix me permet de vérifier rapidement l’impact d’un changement et de détecter une régression avant même d’ouvrir l’interface.
+
+\vspace{\dbspacebefore}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{assets/12_tests_unitaires_tests_integrations/code_packagejson_test_scripts.png}
+  \caption{Scripts de test back-end}
+  \label{fig:tests-scripts}
+\end{figure}
+\vspace{\dbspaceafter}
+
+J’ai organisé mes tests en deux niveaux complémentaires : \textbf{tests unitaires} et \textbf{tests d’intégration}. Avec cette approche, je vérifie à la fois la logique "en détail" (fonction par fonction) et le comportement réel de l’API lorsqu’elle est appelée comme en production (routes Express, statuts, réponses).
+\newpage
+\subsection*{Tests unitaires}
+\addcontentsline{toc}{subsection}{Tests unitaires}
+
+J’utilise les tests unitaires pour sécuriser des fonctions isolées : validations, logique métier simple, et fonctions critiques comme le hash de mot de passe. Ici, je teste \textbf{un comportement précis} sans dépendre du reste : je ne démarre ni serveur ni base de données. Je donne une entrée à une fonction et je vérifie que la sortie est exactement celle attendue.
+
+Par exemple, je teste une fonction de validation qui liste les champs obligatoires manquants. J’ai choisi de couvrir plusieurs cas limites (valeurs vides, espaces, champs manquants) parce que ce sont eux qui provoquent le plus souvent des bugs en production (Figure~\ref{fig:tests-unit-formutils}).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.54\textwidth]{assets/12_tests_unitaires_tests_integrations/code_test_formutils1.png}\par\smallskip
+  \includegraphics[width=0.54\textwidth]{assets/12_tests_unitaires_tests_integrations/code_test_formutils2.png}
+  \caption{Test unitaire : \texttt{getMissingRequiredFields} identifie les champs obligatoires manquants ou vides.}
+  \label{fig:tests-unit-formutils}
+\end{figure}
+\newpage
+
+Je sécurise aussi une fonction critique côté sécurité : le hash de mot de passe. Le test vérifie que le mot de passe n’est jamais stocké en clair et que \texttt{bcrypt} valide bien le hash généré, tout en rejetant un mauvais mot de passe (Figure~\ref{fig:tests-unit-hashpassword}).
+
+\vspace{\dbspacebefore}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{assets/12_tests_unitaires_tests_integrations/code_test_hashpassword_bcrypt.png}
+  \caption{Test unitaire sécurité : \texttt{hashPassword} produit un hash non réversible et validable par \texttt{bcrypt.compare}, tout en refusant un mauvais mot de passe.}
+  \label{fig:tests-unit-hashpassword}
+\end{figure}
+\vspace{\dbspaceafter}
+\vspace{\dbspaceafter}
+Ces tests sont \textbf{rapides} et me donnent un retour immédiat pendant que je développe.
+\newpage
+
+\subsection*{Tests d’intégration}
+\addcontentsline{toc}{subsection}{Tests d’intégration}
+
+En complément, j’ai ajouté des tests d’intégration sur l’API avec \textbf{Supertest}. Je teste l’application \textbf{comme elle est réellement utilisée} : j’envoie une requête HTTP sur une route Express, je vérifie le statut, puis je contrôle le format et le contenu de la réponse.
+
+Un exemple simple mais essentiel : un smoke test qui vérifie que le serveur répond bien et que les routes inconnues renvoient une erreur JSON claire. Ce type de test me donne un signal immédiat si l’API est opérationnelle et correctement configurée (Figure~\ref{fig:tests-int-smoke}).
+
+\vspace{\dbspacebefore}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{assets/12_tests_unitaires_tests_integrations/code_test_smoke.png}
+  \caption{Test d’intégration (smoke)}
+  \label{fig:tests-int-smoke}
+\end{figure}
+\vspace{\dbspaceafter}
+\newpage
+
+Je teste aussi une route de lecture réaliste, \texttt{GET /api/gardens}, en vérifiant non seulement le \texttt{200}, mais aussi la structure des données renvoyées (clés attendues, types, présence des coordonnées). J’ai choisi ce niveau de vérification parce que c’est exactement ce dont le front dépend : une réponse stable, cohérente, et exploitable (Figure~\ref{fig:tests-int-gardens}).
+
+\vspace{\dbspacebefore}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{assets/12_tests_unitaires_tests_integrations/code_test_gardens_get_list.png}
+  \caption{Test d’intégration}
+  \label{fig:tests-int-gardens}
+\end{figure}
+\vspace{\dbspaceafter}
+
+À ce stade du projet, j’ai choisi de concentrer mes tests d’intégration sur des routes de lecture (\texttt{GET}). Elles sont plus simples à rendre reproductibles, car elles ne modifient pas l’état de la base et limitent les effets de bord.
+
+Les routes d’écriture (\texttt{POST}, \texttt{PATCH}, \texttt{DELETE}) demandent une stratégie plus stricte : base de test dédiée et nettoyage systématique entre chaque test, pour repartir d’un état connu et éviter que les tests s’influencent entre eux. J’ai donc priorisé des scénarios lisibles et fiables à relancer, tout en gardant la base nécessaire pour étendre la stratégie sur les routes d’écriture plus tard.
+
+Au final, cette combinaison me donne un cadre fiable pour faire évoluer Jardin Solidaire. Les tests unitaires verrouillent la logique, et les tests d’intégration confirment que l’API répond correctement dans des scénarios proches de l’usage réel.
