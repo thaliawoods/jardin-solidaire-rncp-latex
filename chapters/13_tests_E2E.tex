@@ -1,12 +1,12 @@
 \chapter{Tests end-to-end (E2E)}
 
-En complément des tests unitaires et d’intégration, j’ai mis en place des tests \textbf{end-to-end (E2E)} avec \textbf{Playwright}. Mon objectif est de vérifier que Jardin Solidaire fonctionne \textbf{comme un.e utilisateur·ice le vit}, à l’écran, et pas seulement en théorie via une fonction ou une réponse JSON.
+En complément des tests unitaires et d’intégration, j’ai mis en place des tests \textbf{end-to-end (E2E)} avec \textbf{Playwright}. Mon objectif est de vérifier que Jardin Solidaire fonctionne \textbf{comme un.e utilisateur.ice le vit}, à l’écran, et pas seulement en théorie via une fonction ou une réponse JSON.
 
-Avec les E2E, je rejoue des scénarios complets du début à la fin : un navigateur ouvre l’interface Next.js, l’utilisateur·ice clique, navigue, remplit un formulaire, et l’application déclenche des appels à l’API Express. Ce type de test traverse les couches (front, API, et parfois base) et me permet de valider le parcours réel : est-ce que la page charge, est-ce que la navigation fonctionne, est-ce que les éléments attendus s’affichent, est-ce que je finis au bon endroit ?
+Avec les E2E, je rejoue des scénarios complets du début à la fin : un navigateur ouvre l’interface Next.js, l’utilisateur.ice clique, navigue, remplit un formulaire, et l’application déclenche des appels à l’API Express. Ce type de test traverse les couches (front, API, et parfois base) et me permet de valider le parcours réel : est-ce que la page charge, est-ce que la navigation fonctionne, est-ce que les éléments attendus s’affichent, est-ce que je finis au bon endroit ?
 
 J’ai ciblé en priorité les parcours critiques : charger une page essentielle, naviguer de la liste des jardins vers une fiche jardin, vérifier qu’un formulaire clé est bien rendu, et contrôler que certains comportements changent correctement selon qu’on est connecté·e ou non (par exemple les favoris).
 
-Un exemple représentatif est le scénario \texttt{gardens.spec.js}. Dans ce test, je simule un usage réel : j’ouvre la page des jardins, je vérifie qu’au moins une carte s’affiche, puis je clique sur un jardin et je contrôle que j’arrive bien sur la page de détail (Figure~\ref{fig:e2e-gardens}). J’ai choisi ce scénario parce qu’il sécurise un point de friction classique : si la liste ne rend rien, ou si la navigation casse, l’utilisateur·ice ne peut tout simplement pas avancer. Ici, je valide donc l’expérience complète : chargement, navigation, rendu, et cohérence du parcours.
+Un exemple représentatif est le scénario \texttt{gardens.spec.js}. Dans ce test, je simule un usage réel : j’ouvre la page des jardins, je vérifie qu’au moins une carte s’affiche, puis je clique sur un jardin et je contrôle que j’arrive bien sur la page de détail (Figure~\ref{fig:e2e-gardens}). J’ai choisi ce scénario parce qu’il sécurise un point de friction classique : si la liste ne rend rien, ou si la navigation casse, l’utilisateur.ice ne peut tout simplement pas avancer. Ici, je valide donc l’expérience complète : chargement, navigation, rendu, et cohérence du parcours.
 
 \vspace{\dbspacebefore}
 \begin{figure}[H]
@@ -19,7 +19,7 @@ Un exemple représentatif est le scénario \texttt{gardens.spec.js}. Dans ce tes
 
 \newpage
 
-J’ai aussi écrit un scénario \texttt{register.spec.js} pour valider qu’un parcours clé "formulaire" reste utilisable : présence d’un titre, champ email, champ mot de passe et bouton de soumission. J’ai fait ce choix parce que ces éléments sont des prérequis UX : si un champ disparaît, si un label change, ou si la page ne rend rien, l’utilisateur·ice est bloqué·e immédiatement. Pour rendre le test robuste, j’ai ajouté des fallbacks (par label, type d’input, placeholder), afin qu’un changement mineur de wording ne casse pas le test, tout en détectant les vraies régressions (Figure~\ref{fig:e2e-register}).
+J’ai aussi écrit un scénario \texttt{register.spec.js} pour valider qu’un parcours clé "formulaire" reste utilisable : présence d’un titre, champ email, champ mot de passe et bouton de soumission. J’ai fait ce choix parce que ces éléments sont des prérequis UX : si un champ disparaît, si un label change, ou si la page ne rend rien, l’utilisateur.ice est bloqué·e immédiatement. Pour rendre le test robuste, j’ai ajouté des fallbacks (par label, type d’input, placeholder), afin qu’un changement mineur de wording ne casse pas le test, tout en détectant les vraies régressions (Figure~\ref{fig:e2e-register}).
 
 \vspace{\dbspacebefore}
 \begin{figure}[H]

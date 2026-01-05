@@ -15,9 +15,9 @@ Dans Jardin Solidaire, j’ai créé un workflow dédié aux \textbf{tests du ba
 
 Ce mécanisme me sert de \textbf{filet de sécurité}. Dès que je touche à une partie critique (par exemple la logique de réservation), j’obtiens un retour immédiat : si un test échoue, la pipeline passe au rouge, et je corrige tout de suite pendant que le contexte est encore frais. Ça évite d’accumuler des erreurs invisibles et ça rend l’évolution du projet plus sereine.
 
-En complément, j’ai ajouté d’autres workflows pour couvrir la qualité du projet de manière plus globale. Par exemple, certains lancent des tests \textbf{end-to-end (E2E)} qui rejouent un parcours utilisateur complet dans un navigateur, et d’autres vérifient la construction des images \textbf{Docker}. L’intérêt de Docker, c’est que je teste et je déploie exactement le même paquet : une image validée par les tests correspond à une version précise de l’application, avec ses dépendances et sa configuration.
+En complément, j’ai ajouté d’autres workflows pour couvrir la qualité du projet de manière plus globale. Par exemple, certains lancent des tests \textbf{end-to-end (E2E)} qui rejouent un parcours utilisateur.ice complet dans un navigateur, et d’autres vérifient la construction des images \textbf{Docker}. L’intérêt de Docker, c’est que je teste et je déploie exactement le même paquet : une image validée par les tests correspond à une version précise de l’application, avec ses dépendances et sa configuration.
 
-Au final, cette approche CI/CD m’apporte deux bénéfices très concrets. D’abord, je détecte les \textbf{régressions} le plus tôt possible, avant qu’elles n’arrivent côté utilisateur. Ensuite, quand tout est au vert, je peux livrer une nouvelle version avec plus de confiance, sans refaire manuellement toutes les vérifications. 
+Au final, cette approche CI/CD m’apporte deux bénéfices très concrets. D’abord, je détecte les \textbf{régressions} le plus tôt possible, avant qu’elles n’arrivent côté utilisateur.ice. Ensuite, quand tout est au vert, je peux livrer une nouvelle version avec plus de confiance, sans refaire manuellement toutes les vérifications. 
 
 \newcommand{\backendtestswidth}{0.7} 
 

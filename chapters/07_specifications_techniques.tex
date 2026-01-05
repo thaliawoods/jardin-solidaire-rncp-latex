@@ -7,9 +7,9 @@
 \section*{Choix technologiques}
 \addcontentsline{toc}{section}{Choix technologiques}
 
-Pour construire Jardin Solidaire, j’ai choisi une stack web moderne, organisée \og en couches \fg{}. Une \textbf{architecture en couches} signifie que l’on sépare clairement les responsabilités.
+Pour construire Jardin Solidaire, j’ai choisi une stack web moderne, organisée en couches. Une \textbf{architecture en couches} signifie que l’on sépare clairement les responsabilités.
 
-La première couche est l’\textbf{interface}, c’est-à-dire tout ce que l’utilisateur.ice voit et manipule dans son navigateur : les pages, les formulaires, les boutons, les listes, la carte, etc.
+La première couche est l’\textbf{interface}, c’est-à-dire tout ce que l’utilisateur.icevoit et manipule dans son navigateur : les pages, les formulaires, les boutons, les listes, la carte, etc.
 
 La deuxième couche est la \textbf{logique métier} : c’est le cerveau de l’application. Elle décide si une action est autorisée, applique les règles, vérifie les données et construit les réponses. Cette couche est portée par une \textbf{API}, c’est-à-dire un serveur qui reçoit des requêtes et renvoie des données.
 
@@ -39,14 +39,14 @@ Next.js m’a aussi apporté une structure très claire grâce au routing par fi
 
 Le back-end de Jardin Solidaire est une \textbf{API REST} développée en \textbf{Node.js} avec \textbf{Express}. J’ai choisi cette stack parce qu’elle est légère, très documentée, et qu’elle me permet de garder une structure simple et lisible : des \textbf{routes} (endpoints), des \textbf{contrôleurs} (traitement), et des \textbf{middlewares} (vérifications transverses).
 
-J’ai exposé les fonctionnalités via des routes HTTP (par exemple pour lister des jardins ou créer une réservation) et j’ai renvoyé des réponses standardisées au front. Le back-end garantit la fiabilité : j’y ai centralisé l’authentification, les autorisations selon les rôles (jardinier.e / propriétaire) et les validations qui évitent les incohérences.
+J’ai exposé les fonctionnalités via des routes HTTP (par exemple pour lister des jardins ou créer une réservation) et j’ai renvoyé des réponses standardisées au front. Le back-end garantit la fiabilité : j’y ai centralisé l’authentification, les autorisations selon les rôles (jardinier.e.e / propriétaire) et les validations qui évitent les incohérences.
 
 Pour rendre ces vérifications maintenables, j’ai utilisé des \textbf{middlewares} exécutés avant la logique métier, notamment pour vérifier l’authentification et configurer le \textbf{CORS}. Avec le CORS, j’ai limité les origines autorisées à appeler l’API afin d’éviter qu’une autre application \textbf{consomme l’API}.
 
 \section*{Base de données : PostgreSQL}
 \addcontentsline{toc}{section}{Base de données : PostgreSQL}
 
-J’ai construit Jardin Solidaire autour d’une \textbf{base de données relationnelle}, parce que le cœur du projet repose sur des liens entre les données : un propriétaire possède des jardins, un jardin propose des créneaux, un.e jardinier.e réserve un créneau, et une réservation peut ensuite évoluer (statut, échanges, etc). Ce modèle relationnel me permet de garder une structure cohérente et d’éviter des données déconnectées.
+J’ai construit Jardin Solidaire autour d’une \textbf{base de données relationnelle}, parce que le cœur du projet repose sur des liens entre les données : un propriétaire possède des jardins, un jardin propose des créneaux, un.e jardinier.e.e réserve un créneau, et une réservation peut ensuite évoluer (statut, échanges, etc). Ce modèle relationnel me permet de garder une structure cohérente et d’éviter des données déconnectées.
 
 J’ai choisi \textbf{PostgreSQL} parce que c’est un standard très courant en production et particulièrement adapté à des modèles relationnels. Il s’intègre très bien avec Prisma et l’écosystème Node.js, et il rend le projet plus facilement maintenable : si le projet est repris plus tard, PostgreSQL est familier dans la majorité des environnements professionnels.
 
@@ -71,7 +71,7 @@ J’ai packagé les services du projet et je les lance ensemble avec Docker Comp
 \section*{Qualité : tests (Jest, Supertest, Playwright) et automatisation (GitHub Actions)}
 \addcontentsline{toc}{section}{Qualité : tests (Jest, Supertest, Playwright) et automatisation (GitHub Actions)}
 
-Pour fiabiliser Jardin Solidaire, j’ai mis en place une stratégie de tests à plusieurs niveaux. J’ai utilisé \textbf{Jest} pour écrire des \textbf{tests unitaires} sur des éléments clés (fonctions et règles métier), afin de sécuriser rapidement des comportements critiques et éviter des bugs lors des évolutions. J’ai aussi ajouté des \textbf{tests d’intégration} avec \textbf{Supertest} pour vérifier le comportement de l’API dans des conditions proches du réel. Cela me permet de tester l’API sans passer par l’interface, tout en restant sur des scénarios concrets. J’ai utilisé \textbf{Playwright} pour des \textbf{tests end-to-end}, afin de rejouer des parcours complets d'un.e utilisateur·ices : navigation, formulaires, appels à l’API et affichage des résultats. Je vérifie ainsi que l’application fonctionne correctement de bout en bout. Enfin, j’ai automatisé ces vérifications avec \textbf{GitHub Actions} : à chaque push ou pull request, je lance automatiquement les tests et je vérifie que l’application build correctement. L’objectif est de détecter les régressions le plus tôt possible et de ne pas dépendre uniquement de tests manuels.
+Pour fiabiliser Jardin Solidaire, j’ai mis en place une stratégie de tests à plusieurs niveaux. J’ai utilisé \textbf{Jest} pour écrire des \textbf{tests unitaires} sur des éléments clés (fonctions et règles métier), afin de sécuriser rapidement des comportements critiques et éviter des bugs lors des évolutions. J’ai aussi ajouté des \textbf{tests d’intégration} avec \textbf{Supertest} pour vérifier le comportement de l’API dans des conditions proches du réel. Cela me permet de tester l’API sans passer par l’interface, tout en restant sur des scénarios concrets. J’ai utilisé \textbf{Playwright} pour des \textbf{tests end-to-end}, afin de rejouer des parcours complets d'un.e utilisateur.ices : navigation, formulaires, appels à l’API et affichage des résultats. Je vérifie ainsi que l’application fonctionne correctement de bout en bout. Enfin, j’ai automatisé ces vérifications avec \textbf{GitHub Actions} : à chaque push ou pull request, je lance automatiquement les tests et je vérifie que l’application build correctement. L’objectif est de détecter les régressions le plus tôt possible et de ne pas dépendre uniquement de tests manuels.
 
 \section*{Gestion de code : Git / GitHub}
 \addcontentsline{toc}{section}{Gestion de code : Git / GitHub}
@@ -86,16 +86,16 @@ J’ai organisé le code de Jardin Solidaire pour séparer clairement les respon
 \vspace{\dbspacebefore}
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.29\textwidth]{assets/08_architecture/arborescence.png}
+  \includegraphics[width=0.4\textwidth]{assets/08_architecture/arborescence.png}
   \caption{Arborescence du projet - séparation front-end, back-end, tests et automatisation.}
   \label{fig:js-archi-arborescence}
 \end{figure}
 \vspace{\dbspaceafter}
-
+\newpage
 \section*{Flux technique : du navigateur à la base de données}
 \addcontentsline{toc}{section}{Flux technique : du navigateur à la base de données}
 
-J’ai formalisé le trajet d’une action d'un.e utilisateur.ice pour montrer où s’appliquent les règles et où circulent les données. Quand un.e utilisateur.ice déclenche une action (par exemple demander une réservation), le navigateur appelle le front \textbf{Next.js} (Vercel), qui envoie ensuite une requête à l’API \textbf{Express} (Render). C’est côté API que j’applique l’authentification, les autorisations et les règles métier, avant d’interroger \textbf{PostgreSQL} (Neon) via \textbf{Prisma} et de renvoyer une réponse au front. Même si l’interface affiche un créneau comme disponible, le serveur doit revalider la disponibilité au moment de la demande afin d’éviter une double réservation.
+J’ai formalisé le trajet d’une action d'un.e utilisateur.ice pour montrer où s’appliquent les règles et où circulent les données. Quand un.e utilisateur.icedéclenche une action (par exemple demander une réservation), le navigateur appelle le front \textbf{Next.js} (Vercel), qui envoie ensuite une requête à l’API \textbf{Express} (Render). C’est côté API que j’applique l’authentification, les autorisations et les règles métier, avant d’interroger \textbf{PostgreSQL} (Neon) via \textbf{Prisma} et de renvoyer une réponse au front. Même si l’interface affiche un créneau comme disponible, le serveur doit revalider la disponibilité au moment de la demande afin d’éviter une double réservation.
 
 \vspace{\dbspacebefore}
 \begin{figure}[H]
