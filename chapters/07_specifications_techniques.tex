@@ -46,7 +46,7 @@ Pour rendre ces vérifications maintenables, j’ai utilisé des \textbf{middlew
 \section*{Base de données : PostgreSQL}
 \addcontentsline{toc}{section}{Base de données : PostgreSQL}
 
-J’ai construit Jardin Solidaire autour d’une \textbf{base de données relationnelle}, parce que le cœur du projet repose sur des liens entre les données : un propriétaire possède des jardins, un jardin propose des créneaux, un.e jardinier.e.e réserve un créneau, et une réservation peut ensuite évoluer (statut, échanges, etc). Ce modèle relationnel me permet de garder une structure cohérente et d’éviter des données déconnectées.
+J’ai construit Jardin Solidaire autour d’une \textbf{base de données relationnelle}, parce que le cœur du projet repose sur des liens entre les données : un propriétaire possède des jardins, un jardin propose des créneaux, un.e jardinier.e réserve un créneau, et une réservation peut ensuite évoluer (statut, échanges, etc). Ce modèle relationnel me permet de garder une structure cohérente et d’éviter des données déconnectées.
 
 J’ai choisi \textbf{PostgreSQL} parce que c’est un standard très courant en production et particulièrement adapté à des modèles relationnels. Il s’intègre très bien avec Prisma et l’écosystème Node.js, et il rend le projet plus facilement maintenable : si le projet est repris plus tard, PostgreSQL est familier dans la majorité des environnements professionnels.
 

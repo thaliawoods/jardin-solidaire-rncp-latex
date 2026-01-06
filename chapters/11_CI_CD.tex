@@ -1,6 +1,6 @@
 \chapter{CI/CD, Tests et Qualité}
 
-Pour rendre Jardin Solidaire fiable, je n’ai pas voulu dépendre uniquement de tests "à la main". J’ai donc mis en place une démarche de qualité basée sur la \textbf{CI/CD} : à chaque modification, je déclenche automatiquement des vérifications, et je sais immédiatement si une évolution a cassé quelque chose.
+Pour rendre Jardin Solidaire fiable, je n’ai pas voulu dépendre uniquement de tests à la main. J’ai donc mis en place une démarche de qualité basée sur la \textbf{CI/CD} : à chaque modification, je déclenche automatiquement des vérifications, et je sais immédiatement si une évolution a cassé quelque chose.
 
 J’ai implémenté cette automatisation avec \textbf{GitHub Actions}. Mon objectif était d’avoir un contrôle reproductible, dans un environnement neutre, qui s’exécute de la même façon à chaque \textit{push} et à chaque \textit{pull request}. Je définis une suite d’étapes (installation, configuration, tests), et GitHub Actions les rejoue automatiquement, sans que j’aie à tout relancer.
 

@@ -137,7 +137,7 @@ J’ai isolé l’affichage du statut dans \texttt{BookingStatusBadge} pour gara
 \subsubsection*{Actions : un \textbf{handler} commun piloté par le \textbf{state}}
 Sur la page détail \texttt{/bookings/[id]}, l’utilisateur.ice peut déclencher plusieurs actions (\textit{confirmer}, \textit{annuler}, \textit{terminer}). Plutôt que trois logiques différentes, j’ai regroupé ces actions dans une configuration unique, exécutée via un \textbf{handler} commun.
 
-Un \textbf{handler} est une fonction déclenchée lors d’un événement utilisateur.ice(ici : un clic). J’ai choisi ce modèle pour garantir le même comportement pour chaque bouton : même gestion de chargement, mêmes retours, et même mise à jour du rendu. Concrètement, chaque bouton appelle le \textbf{même} handler (\texttt{doAction}) avec un paramètre différent (Figure~\ref{fig:dev-booking-detail-actions-patch-state1}).
+Un \textbf{handler} est une fonction déclenchée lors d’un événement utilisateur.ice (ici : un clic). J’ai choisi ce modèle pour garantir le même comportement pour chaque bouton : même gestion de chargement, mêmes retours, et même mise à jour du rendu. Concrètement, chaque bouton appelle le \textbf{même} handler (\texttt{doAction}) avec un paramètre différent (Figure~\ref{fig:dev-booking-detail-actions-patch-state1}).
 
 \vspace{\dbspacebefore}
 \begin{figure}[H]
@@ -237,6 +237,25 @@ Enfin, dans cette couche d’accès API, j’ai \textbf{regroupé} et \textbf{no
 \label{fig:dev-owner-endpoints}
 \end{figure}
 \vspace{\dbspaceafter}
+\newpage
+
+\subsection*{Structure Back-End}
+\addcontentsline{toc}{subsection}{Structure Back-End}
+
+Pour le back-end, j’ai structuré la réservation autour de deux ensembles de routes, parce que je voulais séparer
+clairement la demande de réservation et la gestion des créneaux. Comme on le voit sur Figure~\ref{fig:js-backend-organisation}, j’ai regroupé tout ce qui concerne les réservations dans \texttt{routes/bookings.js} (création, liste mes réservations, consultation, mise à jour de statut et actions côté propriétaire comme confirmer ou annuler). J’ai isolé la gestion des disponibilités dans \texttt{routes/availability.js}, pour garder une logique lisible : un créneau se crée et se consulte indépendamment, puis une réservation vient s’y rattacher.
+
+Pour sécuriser l’API, j’ai protégé les routes sensibles avec un middleware d’authentification
+(\texttt{requireAuth}). Il lit le token JWT, vérifie qu’il est valide, puis attache l’utilisateur·ice à la requête
+(\texttt{req.user}). Ensuite, dans les contrôleurs, je peux appliquer les autorisations et les règles métier côté
+serveur, sans dépendre de ce que le front envoie (voir Figure~9.14).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{assets/10_développement/structure_back.png}
+  \caption{Organisation back-end.}
+  \label{fig:js-backend-organisation}
+\end{figure}
 \newpage
 
 \section*{Contrôleur de création}
@@ -371,7 +390,7 @@ Dans Jardin Solidaire, j’ai identifié les obligations liées au RGPD dès la 
 La base légale du traitement repose sur la création d’un compte et l’exécution du service demandé (gérer un jardin, réserver un créneau). J’ai appliqué un principe de \textbf{minimisation} : je ne collecte pas de données non indispensables au parcours, et je garde les informations strictement utiles au fonctionnement.
 
 \subsection*{Protéger les identifiants : mot de passe haché}
-Pour protéger les comptes, je n’enregistre jamais un mot de passe en clair. Lors de la création de compte, je hash le mot de passe avec \texttt{bcrypt} : le hash est calculé dans un sens et ne peut pas être "inversé", ce qui limite l’impact en cas de fuite de base de données. Lors de la connexion, je compare simplement le mot de passe saisi au hash stocké via \texttt{bcrypt.compare}.
+Pour protéger les comptes, je n’enregistre jamais un mot de passe en clair. Lors de la création de compte, je hash le mot de passe avec \texttt{bcrypt} : le hash est calculé dans un sens et ne peut pas être inversé, ce qui limite l’impact en cas de fuite de base de données. Lors de la connexion, je compare simplement le mot de passe saisi au hash stocké via \texttt{bcrypt.compare}.
 
 \vspace{\dbspacebefore}
 \begin{figure}[H]
